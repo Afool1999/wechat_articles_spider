@@ -3,12 +3,15 @@ from mitmproxy import io
 from mitmproxy.exceptions import FlowReadException
 import re
 import os
+from urllib.parse import parse_qs
+
 
 
 # command: python get_params outfile
 def get_params(outfile):
     appmsg_token = ''
     cookie = ''
+    key_ = ''
     with open(outfile, "rb") as logfile:
         freader = io.FlowReader(logfile)
         try:
@@ -19,11 +22,15 @@ def get_params(outfile):
                 try:
                     # 截取其中request部分
                     request = state["request"]
+                    print(request['content'])
                     # 提取Cookie
                     for item in request["headers"]:
                         key, value = item
-                        if key == b"Cookie":
-                            cookie = value.decode()
+                        if key == b"cookie":
+                            cookie = cookie + value.decode() + '; '
+                    params = parse_qs(request['path'])
+                    key_ = params[b'key'][0].decode()
+
 
                     # 提取appmsg_token
                     path = request["path"].decode()
@@ -34,16 +41,12 @@ def get_params(outfile):
                     continue
         except FlowReadException as e:
             print("Flow file corrupted: {}".format(e))
-    return appmsg_token, cookie
+    return appmsg_token, cookie[:-2], key_
 
 
 def main(outfile):
     path = os.path.split(os.path.realpath(__file__))[0]
-    command = "mitmdump -p 9000 -q -s {}/get_outfile.py -w {} mp.weixin.qq.com/mp/getappmsgext".format(
+    command = "mitmdump -q -s {}/get_outfile.py -w {} mp.weixin.qq.com/mp/getappmsgext".format(
         path, outfile)
     os.system(command)
-    try:
-        os.system("rm ./-q")
-    except Exception:
-        pass
     return get_params(outfile)

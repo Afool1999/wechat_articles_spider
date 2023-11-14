@@ -50,7 +50,7 @@ class AccountBiz(object):
         self.cookie = cookie
         self.token = token
         self.t = t
-        self.biz_name = "{}, {}"
+        # self.biz_name = "{}, {}"
         self.proxies = proxies
 
     def run(self, nickname_lst):
@@ -70,8 +70,8 @@ class AccountBiz(object):
                 if official_infos:
                     official_info = official_infos[0]
                     biz = official_info["fakeid"]
-                    tmp = self.biz_name.format(biz, official_info["nickname"])
-                    self.res_lst.append(tmp)
+                    # tmp = self.biz_name.format(biz, official_info["nickname"])
+                    self.res_lst.append([biz, official_info["nickname"]])
                 time.sleep(self.t)
             except Exception as e:
                 print(e)
@@ -96,7 +96,9 @@ class AccountBiz(object):
                     except Exception as e:
                         continue
                         print(e)
-                    self.res_lst.append(self.biz_name.format(biz, nickname))
+                    # self.res_lst.append(self.biz_name.format(biz, nickname))
+                    self.res_lst.append([biz, nickname])
+
                 time.sleep(self.t)
             except Exception as e:
                 print(e)
@@ -118,8 +120,8 @@ class AccountBiz(object):
                     nicknames_lst = re.findall(
                         r'<span class="color-pink">(.+)</span>', s.text
                     )
-                    tmp = self.biz_name.format(biz_lst[0], nicknames_lst[0])
-                    self.res_lst.append(tmp)
+                    # tmp = self.biz_name.format(biz_lst[0], nicknames_lst[0])
+                    self.res_lst.append([biz_lst[0], nicknames_lst[0]])
                 time.sleep(self.t)
             except Exception as e:
                 print(e)

@@ -67,7 +67,7 @@ if __name__ == "__main__":
     # 个人微信号登陆后获取的uin
     uin = "MjYwOTk2NzcwMA=="
     # 个人微信号登陆后获取的key，隔段时间更新
-    key = "b8982b21b1d079650e7439b1694a7e7f686cd01f569a6cea85a7cb305d31d9718099970691f42129739fda6a2b1360f6960a7698869c394389016aa9f57a5a9dca09795dee0df2034d8e80e6a1039a6ce8c26269394d73a8c7a32cf1390dd764ca66c397441c003b757c81bff9f85ae42bee9d729c4153c65c8ceba86f31921f"
+    key = "312ddfd3b954ef2514e804e9474167ad0f1e1bc17bddf42a897e59f15d776a65f17ccafcdef1d4b712c5aa1b5f5440b96088153c3ef31878b107b9ed8fe289f5bbf769a7f6b9d8fd5d8a4598169a29b81bae1ff1c3dd5951c0395bc5f4806c75e842416f579d4d1a3f479339d77d2c2dc80214b13de851cc2e96066fff64e5a5"
 
     lst = get_history_urls(
         biz, uin, key, lst=[], start_timestamp=0, start_count=0, end_count=10
