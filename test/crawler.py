@@ -44,7 +44,7 @@ def worker_function(stop_event):
             host='localhost',
             port=3306,
             user='root',
-            password='Shichufeng991125',
+            password='962464',
             database='db_wx',
             autocommit=True
         )
