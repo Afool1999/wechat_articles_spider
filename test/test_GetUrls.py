@@ -14,7 +14,8 @@ from wechatarticles.utils import get_history_urls, verify_url
 
 def save_xlsx(fj, lst):
     df = pd.DataFrame(lst, columns=["url", "title", "date", "read_num", "like_num"])
-    df.to_excel(fj + ".xlsx", encoding="utf-8")
+    df.to_excel(fj + ".xlsx")
+    # df.to_excel(fj + ".xlsx", encoding="utf-8")
 
 
 def demo(lst):
@@ -62,11 +63,11 @@ def demo(lst):
 
 if __name__ == "__main__":
     # 需要抓取公众号的__biz参数
-    biz = ""
+    biz = "MzA4ODAwMTQzMg=="
     # 个人微信号登陆后获取的uin
-    uin = ""
+    uin = "MjYwOTk2NzcwMA=="
     # 个人微信号登陆后获取的key，隔段时间更新
-    key = ""
+    key = "b8982b21b1d079650e7439b1694a7e7f686cd01f569a6cea85a7cb305d31d9718099970691f42129739fda6a2b1360f6960a7698869c394389016aa9f57a5a9dca09795dee0df2034d8e80e6a1039a6ce8c26269394d73a8c7a32cf1390dd764ca66c397441c003b757c81bff9f85ae42bee9d729c4153c65c8ceba86f31921f"
 
     lst = get_history_urls(
         biz, uin, key, lst=[], start_timestamp=0, start_count=0, end_count=10
@@ -78,10 +79,8 @@ if __name__ == "__main__":
         res_lst += item_lst
 
     # 个人微信号登陆后获取的token
-    appmsg_token = ""
-    # 个人微信号登陆后获取的cookie
-    cookie = ""
-    # 获取点赞数、阅读数、评论信息
+    appmsg_token, cookie = "1243_yAVjxy%2FtbJMuZE7P6zTAekOyfiKI3hsyQvVxeEwzt33RwQxWuKN5ylbJ9Hv8f_8oQMsyekC7t1i7HRCi", "rewardsn=; wxtokenkey=777; wxuin=2609967700; devicetype=Windows10x64; version=6309071d; lang=zh_CN; appmsg_token=1243_FvHB9vgbs3aTk58Z6zTAekOyfiKI3hsyQvVxeKvIZ6meUhjKivDiY6t1-57sAWFbJUHzRpiqru1uBBof; pass_ticket=0qd1KeoF7HTrcAnsPy2vfhus6OwvU6wgq8WMIs01ycCXJCMImhmxcoLkBvUI4T9UPy7gTKAgWVFi8/B3rRDceg==; wap_sid2=CNTkw9wJEooBeV9IT0lzZHZfZmdrdFFSbnNJRjZnaDNBRV93WnFaeHh2WGIxRUNyR1ZrTDQzOHFHRDY1YzBFaVdwZEZnOFpFSHcxSWd4WmR2Rk5vb2Z6REgyLTdjUmdjX3I0THN1X3FJNGszWDJ2NFc0NmFwdnBiLU9ISC1CWldjbGNmQkNhdXVYNFBya1NBQUF+MP3ey6oGOA1AAQ=="
+    article_url = "http://mp.weixin.qq.com/s?__biz=MjM5NDU4ODI0NQ==&mid=2650949647&idx=1&sn=854714295ceee7943fe9426ab10453bf&chksm=bd739b358a041223833057cc3816f9562999e748904f39b166ee2178ce1a565e108fe364b920#rd'"
     ai = ArticlesInfo(appmsg_token, cookie)
 
     # url：微信文章链接. 
