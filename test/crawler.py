@@ -9,9 +9,6 @@ import multiprocessing
 import random as rd
 import json
 
-update_freq = 24 * 60 * 60
-max_time = 9999
-min_time = 5
 rd.seed(int(time.time()))
 
 def load_json(file):
@@ -19,16 +16,20 @@ def load_json(file):
         config = json.load(f)   # 加载我们的数据
     p = config['p']
     token = config['token']
-    key_words = config['key_words']
     cookie = config['cookie']
+    referer = config['referer']
+    key_words = config['key_words']
     nicknames = config["nicknames"]
-    return p, token, cookie, key_words, nicknames
+    update_freq = config["update_freq"]
+    max_time = config["max_time"]
+    min_time = config["min_time"]
+    return p, token, cookie, referer, key_words, nicknames, update_freq, max_time, min_time
 
 def worker_function(stop_event):
     process_id = os.getpid()
     print(f"Worker process {process_id} started.")
 
-    p, token, cookie, key_words, nicknames = load_json('config.json')
+    p, token, cookie, referer, key_words, nicknames, update_freq, max_time, min_time = load_json('config.json')
 
 
 
@@ -53,8 +54,8 @@ def worker_function(stop_event):
         print(e)
         exit()
 
-    paw = PublicAccountsWeb(cookie=cookie, token=token)
-    print(paw.headers)
+    paw = PublicAccountsWeb(cookie=cookie, token=token, referer=referer)
+    error_times = 0
     while not stop_event.is_set():
         nickname_list = nicknames.copy()
         while len(nickname_list) > 0:
@@ -63,7 +64,7 @@ def worker_function(stop_event):
 
             # change UA or not
             if rd.uniform(0, 1) > p:
-                paw = PublicAccountsWeb(cookie=cookie, token=token)
+                paw = PublicAccountsWeb(cookie=cookie, token=token, referer=referer)
 
 
             insert_data = []
@@ -73,11 +74,14 @@ def worker_function(stop_event):
                     ymd = time.localtime(article['create_time'])
                     date = "{}-{}-{}".format(ymd.tm_year, ymd.tm_mon, ymd.tm_mday)
                     insert_data.append([nickname, article['cover'], article['title'], escape_string(article['link']), article['digest'], date])
+                error_times = 0
             except Exception as e:
                 print(e)
                 # append at back, in case of invalid token
-                print(nickname + ' placed back')
+                print("error times:", error_times, ' ' + nickname + ' placed back， sleep ', min((2 ** error_times), 4)*1800)
                 nickname_list.append(nickname)
+                time.sleep(min((2 ** error_times), 4) * 1800)
+                error_times += 1
         
         
             for data in insert_data:
@@ -97,7 +101,7 @@ def worker_function(stop_event):
             sleep_time = min(max(int(rd.gauss(mean_time, mean_time / 3)), min_time), max_time)
             print(sleep_time)
             time.sleep(sleep_time)
-            p, token, cookie, key_words, nicknames = load_json('config.json')
+            p, token, cookie, referer, key_words, nicknames, update_freq, max_time, min_time = load_json('config.json')
 
 
 

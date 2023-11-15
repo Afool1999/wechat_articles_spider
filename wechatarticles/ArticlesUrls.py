@@ -13,7 +13,7 @@ from requests.cookies import cookielib
 class PublicAccountsWeb(object):
     """通过微信公众号网页版抓取链接，或者公众号信息"""
 
-    def __init__(self, cookie, token, proxies={"http": None, "https": None}):
+    def __init__(self, cookie, token, referer, proxies={"http": None, "https": None}):
         """
         Parameters
         ----------
@@ -43,7 +43,8 @@ class PublicAccountsWeb(object):
         ua = random.choice(agent_list)
         print(ua)
         self.headers = {
-            "User-Agent": ua
+            "User-Agent": ua,
+            "Referer": referer
         }
         self.params = {
             "lang": "zh_CN",
