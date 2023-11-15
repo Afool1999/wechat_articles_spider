@@ -9,8 +9,8 @@ import multiprocessing
 import random as rd
 import json
 
-update_freq = 18 * 60 * 60
-max_time = 600
+update_freq = 24 * 60 * 60
+max_time = 9999
 min_time = 5
 rd.seed(int(time.time()))
 
