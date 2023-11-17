@@ -54,7 +54,7 @@ def worker_function(stop_event):
         print(e)
         exit()
 
-    paw = PublicAccountsWeb(cookie=cookie, token=token, referer=referer)
+    paw = PublicAccountsWeb(cookie=cookie, token=token)
     error_times = 0
     while not stop_event.is_set():
         nickname_list = nicknames.copy()
@@ -64,7 +64,7 @@ def worker_function(stop_event):
 
             # change UA or not
             if rd.uniform(0, 1) > p:
-                paw = PublicAccountsWeb(cookie=cookie, token=token, referer=referer)
+                paw = PublicAccountsWeb(cookie=cookie, token=token)
 
 
             insert_data = []
@@ -78,12 +78,12 @@ def worker_function(stop_event):
             except Exception as e:
                 print(e)
                 # append at back, in case of invalid token
-                print("error times:", error_times, ' ' + nickname + ' placed back， sleep ', min((2 ** error_times), 4)*1800)
+                print("error times:", error_times, ' ' + nickname + ' placed back， sleep ', min((2 ** error_times), 4)*3600)
                 nickname_list.append(nickname)
-                time.sleep(min((2 ** error_times), 4) * 1800)
+                time.sleep(min((2 ** error_times), 4) * 3600)
                 error_times += 1
         
-        
+            saved = 0
             for data in insert_data:
                 title = data[2]
                 digest = data[4]
@@ -92,14 +92,16 @@ def worker_function(stop_event):
                     if key_word in title or key_word in digest:
                         save_flag = True
                         break
+                
                 if save_flag:
                     try:
+                        saved += 1
                         cursor.execute("insert into articles values(0, %s, %s, %s, %s, %s, %s, 0)", (*data,))
                     except Exception as e:
                         print(e)
             
             sleep_time = min(max(int(rd.gauss(mean_time, mean_time / 3)), min_time), max_time)
-            print(sleep_time)
+            print(sleep_time, saved)
             time.sleep(sleep_time)
             p, token, cookie, referer, key_words, nicknames, update_freq, max_time, min_time = load_json('config.json')
 
