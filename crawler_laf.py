@@ -140,12 +140,12 @@ def worker_function(stop_event):
                     insert_data.append([nickname, pico_path, article['title'], escape_string(article['link']), article['digest'], date])
                 error_times = 0
             except Exception as e:
-                print(e)
-                # append at back, in case of invalid token
-                # print("error times:", error_times, ' ' + nickname + ' placed back, sleep ', min((2 ** error_times), 4)*3600)
-                # nickname_list.append(nickname)
-                # time.sleep(min((2 ** error_times), 4) * 3600)
-                # error_times += 1
+                if "token" in str(e):
+                    # append at back, in case of invalid token
+                    print("error times:", error_times, ' ' + nickname + ' placed back, sleep ', min((2 ** error_times), 4)*3600)
+                    nickname_list.append(nickname)
+                    # time.sleep(min((2 ** error_times), 4) * 3600)
+                    error_times += 1
         
             saved = 0
             for data in insert_data:
